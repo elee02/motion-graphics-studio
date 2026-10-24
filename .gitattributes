@@ -1,0 +1,18 @@
+# Enforce consistent LF line endings for shaders and scripts across platforms
+* text=auto eol=lf
+*.glsl text eol=lf
+*.vert text eol=lf
+*.frag text eol=lf
+*.py text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Safety guard: mark any binary media extensions as binary so Git never diffs them
+*.mp4 binary
+*.mov binary
+*.png binary
+*.exr binary
+*.blend binary
+*.glb binary

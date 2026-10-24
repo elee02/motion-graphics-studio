@@ -1,0 +1,61 @@
+{
+  "episode_id": "001-fourier-visualized",
+  "title": "The Geometry of Sound & Light: Visualizing the Fourier Transform",
+  "resolution": [1920, 1080],
+  "fps": 60,
+  "shots": [
+    {
+      "id": "shot_01_lateral_prism_r3f",
+      "title": "1. Lateral Hook: Universal Wave Superposition",
+      "mode": "lateral",
+      "engine": "r3f-remotion",
+      "entry": "shots/shot_01_lateral_prism_r3f.tsx",
+      "shaders": [
+        "packages/shaders/common/math_palette.glsl",
+        "packages/shaders/wave_interference.vert",
+        "packages/shaders/wave_interference.frag"
+      ],
+      "duration_sec": 3.0,
+      "fps": 60,
+      "seed": 101,
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.5,
+          "assertion": "3D GLSL harmonic wave interference field is visible with isoline contours and crisp top-left title overlay."
+        }
+      ]
+    },
+    {
+      "id": "shot_02_3d_helix_blender",
+      "title": "2. 3D Intuition: Euler Helix & Orthogonal Shadows",
+      "mode": "deep-dive",
+      "engine": "blender",
+      "entry": "shots/shot_02_3d_helix_blender.py",
+      "duration_sec": 3.0,
+      "fps": 60,
+      "seed": 202,
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.5,
+          "assertion": "3D Cyan Euler spiral is centered above the reference grid, with Amber and Violet orthogonal wave projections clearly separated."
+        }
+      ]
+    },
+    {
+      "id": "shot_03_epicycles_manim",
+      "title": "3. Formal Mechanics: Odd-Harmonic Epicycle Synthesis",
+      "mode": "deep-dive",
+      "engine": "manim",
+      "entry": "shots/shot_03_epicycles_manim.py",
+      "duration_sec": 3.0,
+      "fps": 60,
+      "seed": 303,
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.5,
+          "assertion": "Nested epicycle circles on the left connect via an Amber projection line to the synthesized Cyan waveform on the right."
+        }
+      ]
+    }
+  ]
+}

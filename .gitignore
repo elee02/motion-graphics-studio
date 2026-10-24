@@ -1,0 +1,85 @@
+# ============================================================================
+# MOTION GRAPHICS STUDIO - ZERO-BINARY / CODE-AS-SCENE GITIGNORE
+# Principle: Track only deterministic source code (Python, TS/TSX, GLSL, JSON).
+# Never commit heavy renders, video files, audio masters, or binary caches.
+# ============================================================================
+
+# --- 1. Rendered Media & Output Artifacts (Generated on-demand) ---
+**/renders/
+**/dist/
+**/out/
+**/frames/
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.gif
+*.wav
+*.mp3
+*.flac
+*.aac
+*.ogg
+*.exr
+*.hdr
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.tiff
+
+# Allow explicitly committed lightweight reference diagrams in docs/
+!docs/assets/*.png
+!docs/assets/*.svg
+
+# --- 2. 3D Binary Files & Caches (Generated procedurally via scripts) ---
+*.blend
+*.blend1
+*.blend2
+*.obj
+*.fbx
+*.glb
+*.gltf
+*.stl
+*.dae
+*.abc
+*.usd
+*.usdc
+*.usda
+.blender_cache/
+
+# --- 3. Manim Media & TeX Caches ---
+media/
+tex/
+*.aux
+*.dvi
+*.log
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# --- 4. Content-Addressed Build Cache ---
+.studio_cache/
+build/
+
+# --- 5. Node / Remotion / Three.js ---
+node_modules/
+.remotion/
+.turbo/
+*.tsbuildinfo
+
+# --- 6. Python / Virtual Environments ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# --- 7. Environment & OS ---
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
