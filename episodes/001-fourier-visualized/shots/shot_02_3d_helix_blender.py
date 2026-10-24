@@ -22,7 +22,7 @@ def build_euler_helix_shot(scene: StudioScene) -> None:
 
     scene.setup_three_point_lighting(energy_scale=1.25)
     scene.create_orbit_camera(
-        radius=7.8,
+        radius=10.8,
         elevation_deg=28.0,
         start_angle_deg=22.0,
         end_angle_deg=58.0,
