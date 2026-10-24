@@ -1,0 +1,73 @@
+{
+  "episode_id": "002-harry-potter-novel-trailer",
+  "title": "HARRY POTTER: Geometries of the Novel (3D Trailer Remix)",
+  "resolution": [1920, 1080],
+  "fps": 24,
+  "audio_generator": "shots/synth_trailer_audio.py",
+  "shots": [
+    {
+      "id": "shot_01_privet_drive_sigil",
+      "title": "ACT I - THE BOY WHO LIVED (Ch. 1 - The Put-Outer & The Scar)",
+      "mode": "lateral",
+      "engine": "blender",
+      "entry": "shots/shot_01_privet_drive_sigil.py",
+      "duration_sec": 4.0,
+      "fps": 24,
+      "seed": 701,
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.5,
+          "assertion": "Glowing golden lightning bolt sigil is centered inside rotating astronomical Deluminator rings with streetlamp orbs spiraling inward."
+        }
+      ]
+    },
+    {
+      "id": "shot_02_great_hall_candles",
+      "title": "ACT II - THE GREAT HALL (Ch. 7 - A Thousand Floating Candles)",
+      "mode": "lateral",
+      "engine": "blender",
+      "entry": "shots/shot_02_great_hall_candles.py",
+      "duration_sec": 4.0,
+      "fps": 24,
+      "seed": 702,
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.5,
+          "assertion": "Gothic cathedral arches frame rows of levitating candles with glowing amber flames beneath a starry enchanted ceiling spiral."
+        }
+      ]
+    },
+    {
+      "id": "shot_03_quidditch_snitch",
+      "title": "ACT III - QUIDDITCH (Ch. 11 - Three Golden Hoops & The Snitch)",
+      "mode": "deep-dive",
+      "engine": "blender",
+      "entry": "shots/shot_03_quidditch_snitch.py",
+      "duration_sec": 4.0,
+      "fps": 24,
+      "seed": 703,
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.5,
+          "assertion": "Three golden Quidditch hoops and central winged Golden Snitch are intertwined with Crimson and Emerald broomstick light trails."
+        }
+      ]
+    },
+    {
+      "id": "shot_04_mirror_of_erised",
+      "title": "ACT IV - THE PHILOSOPHERS STONE (Ch. 12 & 17 - Mirror of Erised)",
+      "mode": "deep-dive",
+      "engine": "blender",
+      "entry": "shots/shot_04_mirror_of_erised.py",
+      "duration_sec": 4.0,
+      "fps": 24,
+      "seed": 704,
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.5,
+          "assertion": "Ornate golden Mirror of Erised arch surrounds the glowing crimson Philosopher's Stone and concentric alchemical rings."
+        }
+      ]
+    }
+  ]
+}

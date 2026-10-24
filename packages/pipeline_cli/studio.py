@@ -153,7 +153,7 @@ def execute_shot_render(
 
     if engine == "blender":
         blender_bin = find_blender_binary()
-        if blender_bin and preview_frame is not None:
+        if blender_bin:
             # Run genuine headless Blender (`blender -b --factory-startup -P <script> -- ...`)
             cmd = [
                 blender_bin,
@@ -172,9 +172,9 @@ def execute_shot_render(
                 str(duration),
                 "--seed",
                 str(seed),
-                "--frame",
-                str(preview_frame),
             ]
+            if preview_frame is not None:
+                cmd.extend(["--frame", str(preview_frame)])
             subprocess.run(cmd, check=True, cwd=str(REPO_ROOT))
             return
 
@@ -303,26 +303,69 @@ def cmd_build(args: argparse.Namespace) -> None:
         encoding="utf-8",
     )
     master_mp4 = dist_dir / f"{args.episode}_master.mp4"
-    subprocess.run(
-        [
-            "ffmpeg",
-            "-y",
-            "-loglevel",
-            "error",
-            "-f",
-            "concat",
-            "-safe",
-            "0",
-            "-i",
-            str(concat_list),
-            "-c:v",
-            "libx264",
-            "-pix_fmt",
-            "yuv420p",
-            str(master_mp4),
-        ],
-        check=True,
-    )
+    audio_script = board.get("audio_generator")
+    if audio_script:
+        audio_wav = cache_dir / "episode_score.wav"
+        subprocess.run(
+            [
+                sys.executable,
+                str(episode_dir / audio_script),
+                "--output",
+                str(audio_wav),
+                "--duration",
+                str(elapsed_sec),
+            ],
+            check=True,
+            cwd=str(REPO_ROOT),
+        )
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-loglevel",
+                "error",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                str(concat_list),
+                "-i",
+                str(audio_wav),
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                "-c:a",
+                "aac",
+                "-b:a",
+                "192k",
+                "-shortest",
+                str(master_mp4),
+            ],
+            check=True,
+        )
+    else:
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-loglevel",
+                "error",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                str(concat_list),
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                str(master_mp4),
+            ],
+            check=True,
+        )
 
     # Write YouTube chapters file
     chapters_file = dist_dir / "youtube_chapters.txt"
