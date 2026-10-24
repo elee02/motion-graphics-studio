@@ -32,6 +32,24 @@ def build_shot(scene: StudioScene) -> None:
         target=(0.0, 0.0, 0.4),
     )
 
+    # 0. Imported 3D Assets: Wrought-Iron Privet Drive Streetlamp & Wizard Figure
+    scene.import_glb_asset(
+        name="PrivetDriveStreetLantern",
+        filename="Lantern.glb",
+        location=(-2.85, -0.35, -1.5),
+        target_height=3.6,
+        rotation_euler=(0.0, 0.0, math.radians(35.0)),
+    )
+    scene.import_glb_asset(
+        name="WizardFigurePrivetDrive",
+        filename="Xbot.glb",
+        location=(2.55, -0.55, -1.5),
+        target_height=2.65,
+        rotation_euler=(0.0, 0.0, math.radians(-45.0)),
+        override_color=StudioPalette.SILVER,
+        emission_strength=1.4,
+    )
+
     # 1. Central 3D Jagged Lightning Bolt Sigil (Amber-Gold high emission)
     bolt_pts = [
         (0.45, 0.0, 2.35),

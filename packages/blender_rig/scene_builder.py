@@ -361,6 +361,110 @@ class StudioScene:
         if mat:
             obj.data.materials.append(mat)
 
+    def import_glb_asset(
+        self,
+        name: str,
+        filename: str,
+        location: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+        target_height: float = 2.4,
+        rotation_euler: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+        override_color: Optional[Tuple[float, float, float, float]] = None,
+        emission_strength: float = 0.0,
+        animate_turntable_rev: float = 0.0,
+    ) -> None:
+        """
+        Imports an external 3D `.glb` character or prop from `.blender_cache/models/`,
+        normalizes its bounding-box height to `target_height`, centers its base at `location`,
+        and optionally applies a stylized emission/metallic shader or turntable animation.
+        """
+        if not HAS_BPY:
+            return
+        repo_root = Path(__file__).resolve().parents[2]
+        glb_path = repo_root / ".blender_cache" / "models" / filename
+        if not glb_path.exists():
+            raise FileNotFoundError(f"Cached 3D model not found: {glb_path}")
+
+        before_objs = set(bpy.data.objects)
+        bpy.ops.import_scene.gltf(filepath=str(glb_path))
+        imported_objs = [o for o in bpy.data.objects if o not in before_objs]
+        if not imported_objs:
+            return
+
+        # Remove any imported background/backdrop planes (e.g. in DragonAttenuation.glb)
+        mesh_objs = []
+        for obj in imported_objs:
+            if obj.type == "MESH":
+                if "cloth" in obj.name.lower() or "backdrop" in obj.name.lower() or "plane" in obj.name.lower():
+                    bpy.data.objects.remove(obj, do_unlink=True)
+                    continue
+                mesh_objs.append(obj)
+
+        if not mesh_objs:
+            return
+
+        bpy.context.view_layer.update()
+
+        # Compute world-space bounding box across all imported meshes
+        min_x = min_y = min_z = float("inf")
+        max_x = max_y = max_z = float("-inf")
+        for mobj in mesh_objs:
+            for corner in mobj.bound_box:
+                wc = mobj.matrix_world @ mathutils.Vector(corner)
+                min_x, max_x = min(min_x, wc.x), max(max_x, wc.x)
+                min_y, max_y = min(min_y, wc.y), max(max_y, wc.y)
+                min_z, max_z = min(min_z, wc.z), max(max_z, wc.z)
+
+        extent = max(max_x - min_x, max_y - min_y, max_z - min_z, 1e-4)
+        scale_factor = target_height / extent
+        center_x = 0.5 * (min_x + max_x)
+        center_y = 0.5 * (min_y + max_y)
+        base_z = min_z
+
+        rig = bpy.data.objects.new(f"{name}_Rig", None)
+        bpy.context.collection.objects.link(rig)
+
+        # Parent top-level imported objects to our normalization rig
+        imported_set = set( bpy.data.objects ) - before_objs
+        for obj in imported_set:
+            if obj.parent is None and obj != rig:
+                orig_mat = obj.matrix_world.copy()
+                obj.parent = rig
+                obj.matrix_world = orig_mat
+
+        # Offset and scale via an intermediate pivot so base sits cleanly at `location`
+        rig.scale = (scale_factor, scale_factor, scale_factor)
+        rig.rotation_euler = rotation_euler
+        rot_mat = mathutils.Euler(rotation_euler).to_matrix()
+        local_offset = rot_mat @ mathutils.Vector(
+            (-center_x * scale_factor, -center_y * scale_factor, -base_z * scale_factor)
+        )
+        rig.location = (
+            location[0] + local_offset.x,
+            location[1] + local_offset.y,
+            location[2] + local_offset.z,
+        )
+
+        if override_color is not None:
+            mat = self.create_metallic_material(
+                f"{name}_OverrideMat",
+                override_color,
+                metallic=0.72,
+                roughness=0.24,
+                emission_color=override_color,
+                emission_strength=max(0.15, emission_strength * 0.22),
+            )
+            if mat:
+                for mobj in mesh_objs:
+                    mobj.data.materials.clear()
+                    mobj.data.materials.append(mat)
+
+        if abs(animate_turntable_rev) > 1e-4:
+            rig.keyframe_insert(data_path="rotation_euler", frame=1)
+            end_rot = list(rotation_euler)
+            end_rot[2] += 2.0 * math.pi * animate_turntable_rev
+            rig.rotation_euler = tuple(end_rot)
+            rig.keyframe_insert(data_path="rotation_euler", frame=self.total_frames)
+
     @classmethod
     def run_cli(cls, builder_fn: Callable[["StudioScene"], None]) -> None:
         argv = sys.argv

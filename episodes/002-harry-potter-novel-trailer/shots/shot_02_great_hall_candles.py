@@ -32,6 +32,26 @@ def build_shot(scene: StudioScene) -> None:
         target=(0.0, 0.0, 0.8),
     )
 
+    # 0. Imported 3D Assets: Twin Snowy Owl / Messenger Birds Soaring Through the Great Hall
+    scene.import_glb_asset(
+        name="HedwigMessengerBirdMain",
+        filename="Parrot.glb",
+        location=(-0.65, -0.85, 0.75),
+        target_height=1.75,
+        rotation_euler=(math.radians(12.0), 0.0, math.radians(25.0)),
+        override_color=StudioPalette.WHITE,
+        emission_strength=2.2,
+    )
+    scene.import_glb_asset(
+        name="MessengerBirdCompanion",
+        filename="Parrot.glb",
+        location=(1.25, 0.55, 1.35),
+        target_height=1.35,
+        rotation_euler=(math.radians(-8.0), 0.0, math.radians(-30.0)),
+        override_color=StudioPalette.GOLD,
+        emission_strength=2.4,
+    )
+
     # 1. Gothic Pointed Cathedral Arches Framing the Great Hall Nave
     for idx, y_pos in enumerate([-2.4, 0.0, 2.4]):
         scene.add_parametric_curve(

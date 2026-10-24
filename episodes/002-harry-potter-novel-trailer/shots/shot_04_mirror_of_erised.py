@@ -32,6 +32,27 @@ def build_shot(scene: StudioScene) -> None:
         target=(0.0, 0.0, 0.7),
     )
 
+    # 0. Imported 3D Assets: Young Seeker Figure & Sculpted Golden Guardian Dragon
+    scene.import_glb_asset(
+        name="YoungSeekerBeforeMirror",
+        filename="Xbot.glb",
+        location=(-2.25, -0.95, -1.45),
+        target_height=2.55,
+        rotation_euler=(0.0, 0.0, math.radians(35.0)),
+        override_color=StudioPalette.CYAN,
+        emission_strength=1.8,
+    )
+    scene.import_glb_asset(
+        name="ChamberGuardianDragon",
+        filename="DragonAttenuation.glb",
+        location=(2.35, -0.45, -1.45),
+        target_height=2.5,
+        rotation_euler=(0.0, 0.0, math.radians(-35.0)),
+        override_color=StudioPalette.GOLD,
+        emission_strength=2.0,
+        animate_turntable_rev=0.2,
+    )
+
     # 1. Ornate Golden Arch of the Mirror of Erised
     mirror_pts = [
         (-1.65, 0.0, -1.45),

@@ -1,0 +1,36 @@
+{
+  "description": "External 3D GLB character & prop assets fetched on-demand into git-ignored .blender_cache/models/",
+  "cache_dir": ".blender_cache/models",
+  "assets": [
+    {
+      "id": "privet_drive_lantern",
+      "filename": "Lantern.glb",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Lantern/glTF-Binary/Lantern.glb",
+      "role": "Act I: Wrought-iron Privet Drive streetlamp for Dumbledore's Put-Outer"
+    },
+    {
+      "id": "wizard_character_xbot",
+      "filename": "Xbot.glb",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Xbot.glb",
+      "role": "Act I & Act IV: Rigged 3D human character figure (Privet Drive watcher & Mirror of Erised seeker)"
+    },
+    {
+      "id": "magical_messenger_bird",
+      "filename": "Parrot.glb",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb",
+      "role": "Act II: Winged messenger bird soaring through the Great Hall floating candles"
+    },
+    {
+      "id": "patronus_guardian_fox",
+      "filename": "Fox.glb",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Fox/glTF-Binary/Fox.glb",
+      "role": "Act III: Ethereal silver-cyan guardian creature & Quidditch mascot"
+    },
+    {
+      "id": "norbert_guardian_dragon",
+      "filename": "DragonAttenuation.glb",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/DragonAttenuation/glTF-Binary/DragonAttenuation.glb",
+      "role": "Act IV: Guardian Dragon of the Philosopher's Stone chamber"
+    }
+  ]
+}

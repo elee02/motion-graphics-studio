@@ -32,6 +32,18 @@ def build_shot(scene: StudioScene) -> None:
         target=(0.0, 0.0, 0.5),
     )
 
+    # 0. Imported 3D Asset: Glowing Silver-Cyan Patronus Guardian Creature on the Pitch
+    scene.import_glb_asset(
+        name="PatronusGuardianCreature",
+        filename="Fox.glb",
+        location=(-1.55, -1.25, -1.45),
+        target_height=2.25,
+        rotation_euler=(0.0, 0.0, math.radians(40.0)),
+        override_color=StudioPalette.CYAN,
+        emission_strength=3.2,
+        animate_turntable_rev=0.15,
+    )
+
     # 1. Three Towering Golden Quidditch Goal Hoops + Masts
     hoop_configs = [
         ("LeftHoop", (-2.3, 0.8, 0.9), 1.8),
