@@ -65,6 +65,10 @@ class StudioScene:
             return
         bpy.ops.wm.read_factory_settings(use_empty=True)
         scn = bpy.context.scene
+        scn.render.engine = "CYCLES"
+        scn.cycles.device = "CPU"
+        scn.cycles.samples = 24
+        scn.cycles.use_denoising = False
         scn.render.fps = self.fps
         scn.frame_start = 1
         scn.frame_end = self.total_frames
@@ -381,12 +385,55 @@ class StudioScene:
         out_path.parent.mkdir(parents=True, exist_ok=True)
 
         if HAS_BPY:
+            # Add reference coordinate axes and floor grid in 3D space
+            grid_mat = scene.create_emission_material("GridMat", (0.08, 0.14, 0.25, 1.0), strength=1.2)
+            for g in range(-4, 5):
+                for seg_name, p0, p1 in [
+                    (f"GridX_{g}", (-4.0, float(g), -1.5), (4.0, float(g), -1.5)),
+                    (f"GridY_{g}", (float(g), -4.0, -1.5), (float(g), 4.0, -1.5)),
+                ]:
+                    cdata = bpy.data.curves.new(name=seg_name, type="CURVE")
+                    cdata.dimensions = "3D"
+                    cdata.bevel_depth = 0.012
+                    sp = cdata.splines.new(type="POLY")
+                    sp.points.add(1)
+                    sp.points[0].co = (*p0, 1.0)
+                    sp.points[1].co = (*p1, 1.0)
+                    cobj = bpy.data.objects.new(seg_name, cdata)
+                    bpy.context.collection.objects.link(cobj)
+                    if grid_mat:
+                        cobj.data.materials.append(grid_mat)
+
             scn = bpy.context.scene
             if args.frame is not None:
                 scn.frame_set(args.frame)
                 scn.render.image_settings.file_format = "PNG"
-                scn.render.filepath = str(out_path)
+                raw_png = out_path.with_name(out_path.stem + "_raw.png")
+                scn.render.filepath = str(raw_png)
                 bpy.ops.render.render(write_still=True)
+
+                import subprocess
+                safe_title = scene.title.replace(":", "\\:")
+                safe_sub = f"{scene.subtitle} (Blender 4.2 Cycles)  |  Frame {args.frame}/{scene.total_frames}".replace(":", "\\:")
+                subprocess.run(
+                    [
+                        "ffmpeg",
+                        "-y",
+                        "-loglevel",
+                        "error",
+                        "-i",
+                        str(raw_png),
+                        "-vf",
+                        (
+                            f"drawbox=x=48:y=36:w=1240:h=105:color=0x0B0F19@0.78:t=fill,"
+                            f"drawtext=text='{safe_title}':fontcolor=white:fontsize=38:x=68:y=52,"
+                            f"drawtext=text='{safe_sub}':fontcolor=0x00E5FF:fontsize=24:x=68:y=102"
+                        ),
+                        str(out_path),
+                    ],
+                    check=True,
+                )
+                raw_png.unlink(missing_ok=True)
             else:
                 scn.render.image_settings.file_format = "FFMPEG"
                 scn.render.ffmpeg.format = "MPEG4"

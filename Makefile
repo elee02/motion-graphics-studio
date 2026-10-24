@@ -9,20 +9,21 @@
 
 EP ?= 001-fourier-visualized
 TITLE ?= Untitled Educational Episode
+PYTHON := $(shell if [ -x .venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 
 .PHONY: status preview build new clean
 
 status:
-	python3 -m packages.pipeline_cli.studio status $(EP)
+	$(PYTHON) -m packages.pipeline_cli.studio status $(EP)
 
 preview:
-	python3 -m packages.pipeline_cli.studio preview $(EP)
+	$(PYTHON) -m packages.pipeline_cli.studio preview $(EP)
 
 build:
-	python3 -m packages.pipeline_cli.studio build $(EP)
+	$(PYTHON) -m packages.pipeline_cli.studio build $(EP)
 
 new:
-	python3 -m packages.pipeline_cli.studio init-episode $(EP) --title "$(TITLE)"
+	$(PYTHON) -m packages.pipeline_cli.studio init-episode $(EP) --title "$(TITLE)"
 
 clean:
 	rm -rf episodes/*/renders episodes/*/dist

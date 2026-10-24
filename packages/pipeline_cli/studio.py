@@ -129,6 +129,14 @@ def render_r3f_shader_preview_png(
         ppm_path.unlink(missing_ok=True)
 
 
+def find_blender_binary() -> str | None:
+    """Locates the workspace-cached headless Blender binary or system `blender`."""
+    local_bin = REPO_ROOT / ".blender_cache" / "blender" / "blender"
+    if local_bin.exists():
+        return str(local_bin)
+    return shutil.which("blender")
+
+
 def execute_shot_render(
     episode_dir: Path,
     shot: Dict[str, Any],
@@ -142,6 +150,33 @@ def execute_shot_render(
     duration = float(shot.get("duration_sec", 5.0))
     seed = int(shot.get("seed", 42))
     total_frames = max(1, int(round(fps * duration)))
+
+    if engine == "blender":
+        blender_bin = find_blender_binary()
+        if blender_bin and preview_frame is not None:
+            # Run genuine headless Blender (`blender -b --factory-startup -P <script> -- ...`)
+            cmd = [
+                blender_bin,
+                "-b",
+                "--factory-startup",
+                "--python-exit-code",
+                "1",
+                "-P",
+                str(entry_script),
+                "--",
+                "--output",
+                str(output_path),
+                "--fps",
+                str(fps),
+                "--duration",
+                str(duration),
+                "--seed",
+                str(seed),
+                "--frame",
+                str(preview_frame),
+            ]
+            subprocess.run(cmd, check=True, cwd=str(REPO_ROOT))
+            return
 
     if engine in ("blender", "manim"):
         cmd = [
