@@ -1,0 +1,43 @@
+{
+  "episode_id": "003-midnight-ramen",
+  "title": "Midnight Ramen",
+  "resolution": [1920, 1080],
+  "fps": 24,
+  "audio_generator": "shots/score.py",
+  "shots": [
+    {
+      "id": "shot_01_night_shift",
+      "title": "1. The Night Shift — one continuous move through a rain-soaked stall",
+      "mode": "cold-open",
+      "engine": "blender",
+      "entry": "shots/shot_01_midnight_ramen.py",
+      "duration_sec": 10.0,
+      "fps": 24,
+      "seed": 42,
+      "params": {
+        "cast": ["cook", "hooded customer", "shop cat"],
+        "set": "rain-soaked alley ramen stall, midnight",
+        "camera": "50mm, f/2.8, wide -> over-the-counter push-in",
+        "render": "Cycles OptiX, 64 samples, OIDN, AgX"
+      },
+      "keyframe_checks": [
+        {
+          "timestamp_norm": 0.0,
+          "assertion": "Wide alley: lit sign MIDNIGHT RAMEN legible, three noren panels hanging, cat on the counter, rain visible, cool doorway glow right."
+        },
+        {
+          "timestamp_norm": 0.45,
+          "assertion": "Medium shot: cook is behind the counter stirring the broth pot; customer's hooded back occupies the left third; steam rises from the pot."
+        },
+        {
+          "timestamp_norm": 0.65,
+          "assertion": "Customer lifts chopsticks toward the hood; cook's head nods; lantern and sign flicker remain subtle."
+        },
+        {
+          "timestamp_norm": 1.0,
+          "assertion": "Close two-shot: counter texture, cat, bottles and both characters readable; no clipped highlights on the cook's face."
+        }
+      ]
+    }
+  ]
+}
